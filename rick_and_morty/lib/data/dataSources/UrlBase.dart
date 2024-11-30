@@ -1,0 +1,1 @@
+final String URLBASE = "https://rickandmortyapi.com";

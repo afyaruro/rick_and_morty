@@ -18,7 +18,9 @@ abstract class _StoreFavorite with Store {
       favorites.clear();
       final allFavorites = GetIt.instance<AllFavorites>();
       FavoriteResponse response = await allFavorites.allFavorites();
-      favorites.addAll(response.favorites!);
+
+      favorites.addAll(response.favorites ?? []);
+
     } catch (e) {
       print("Error: $e");
     }

@@ -36,7 +36,7 @@ class CharacterModel extends CharacterEntity {
         created: created);
   }
 
-  Map<String, dynamic> toJson() {
+  Map<dynamic, dynamic> toJson() {
     return {
       'id': id,
       'name': name,
@@ -45,7 +45,7 @@ class CharacterModel extends CharacterEntity {
       'type': type,
       'gender': gender,
       'image': image,
-      'created': created.toIso8601String(),
+      // 'created': created.toIso8601String(),
     };
   }
 }

@@ -1,22 +1,26 @@
 import 'package:rick_and_morty/data/data.dart';
 import 'package:rick_and_morty/domain/domain.dart';
 
-class FavoriteModel {
-  final int id;
-  final CharacterEntity character;
+class FavoriteModel extends FavoriteEntity{
 
-  FavoriteModel({required this.id, required this.character});
+
+  FavoriteModel({required super.id, required super.character});
 
   factory FavoriteModel.fromJson(Map<String, dynamic> json) {
     return FavoriteModel(
-        id: json['id'] as int, character: json['character'] as CharacterModel);
+        id: json['id'] as int,
+        character:
+            CharacterModel.fromJson(json['character'] as Map<String, dynamic>));
   }
 
-  FavoriteEntity toCharacterEntity() {
+  FavoriteEntity toEntity() {
     return FavoriteEntity(id: id, character: character);
   }
 
   Map<String, dynamic> toJson() {
-    return {'id': id, 'character': character};
+    return {
+      'id': id,
+      'character': (character as CharacterModel).toJson(),
+    };
   }
 }

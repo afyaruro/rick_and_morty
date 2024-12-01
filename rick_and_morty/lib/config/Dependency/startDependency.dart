@@ -34,10 +34,10 @@ class StartDependency {
         () => FavoriteLocalDataSource());
 
     final storeCharacter = GetIt.instance<StoreCharacter>();
+    final storeFavorite = GetIt.instance<StoreFavorite>();
+    await storeFavorite.getFavorites();
     await storeCharacter.getCharacters(1);
 
-    await Hive.initFlutter();
-
-    await Hive.openBox('grupos');
+    
   }
 }

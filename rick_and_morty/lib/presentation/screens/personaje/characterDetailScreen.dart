@@ -17,11 +17,17 @@ class CharacterDetailScreen extends StatefulWidget {
 class _CharacterDetailScreenState extends State<CharacterDetailScreen> {
   late bool isFavorite;
   late StoreFavorite storeFavorite;
+  late FavoriteEntity favoriteEntity;
 
   @override
   void initState() {
     super.initState();
     storeFavorite = GetIt.instance<StoreFavorite>();
+    favoriteEntity = FavoriteEntity(
+      id: widget.character.id,
+      character: widget.character,
+    );
+
     isFavorite = storeFavorite.favorites
         .any((fav) => fav.character.id == widget.character.id);
   }
@@ -70,19 +76,21 @@ class _CharacterDetailScreenState extends State<CharacterDetailScreen> {
                         Text(
                           widget.character.name,
                           style: GoogleFonts.poppins(
-                              fontSize: 28,
-                              fontWeight: FontWeight.bold,
-                              color: const Color.fromARGB(255, 255, 255, 255)),
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                            color: const Color.fromARGB(255, 255, 255, 255),
+                          ),
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 8),
                         _buildDetailRow('Status', widget.character.status),
                         _buildDetailRow('Species', widget.character.species),
                         _buildDetailRow(
-                            'Type',
-                            widget.character.type.isEmpty
-                                ? 'N/A'
-                                : widget.character.type),
+                          'Type',
+                          widget.character.type.isEmpty
+                              ? 'N/A'
+                              : widget.character.type,
+                        ),
                         _buildDetailRow('Gender', widget.character.gender),
                         const SizedBox(height: 24),
                         Row(
@@ -108,31 +116,32 @@ class _CharacterDetailScreenState extends State<CharacterDetailScreen> {
                                     fontWeight: FontWeight.w500),
                               ),
                             ),
-                            Visibility(
-                              visible: !isFavorite,
-                              child: IconButton(
-                                onPressed: () async {
-                                  FavoriteEntity favoriteEntity =
-                                      FavoriteEntity(
-                                          id: widget.character.id,
-                                          character: widget.character);
+                            IconButton(
+                              onPressed: () async {
+                                if (!isFavorite) {
+                                  await storeFavorite
+                                      .addFavorite(favoriteEntity);
+                                } else {
+                                  final favoriteToRemove =
+                                      storeFavorite.favorites.firstWhere(
+                                    (favorite) =>
+                                        favorite.id == widget.character.id,
+                                  );
+                                  await storeFavorite
+                                      .deleteFavorite(favoriteToRemove);
+                                }
 
-                                  if (!isFavorite) {
-                                    await storeFavorite
-                                        .addFavorite(favoriteEntity);
-                                  }
-
-                                  // Actualiza el estado para redibujar el corazón
-                                  setState(() {
-                                    isFavorite = !isFavorite;
-                                  });
-                                },
-                                icon: Icon(
-                                  Icons.favorite,
-                                  color: isFavorite ? Colors.red : Colors.white,
-                                ),
+                                setState(() {
+                                  isFavorite = !isFavorite;
+                                });
+                              },
+                              icon: Icon(
+                                isFavorite
+                                    ? Icons.favorite_rounded
+                                    : Icons.favorite_border_rounded,
+                                color: isFavorite ? Colors.red : Colors.white,
                               ),
-                            )
+                            ),
                           ],
                         ),
                       ],

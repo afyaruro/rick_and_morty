@@ -21,7 +21,7 @@ class FavoriteResponse {
 
   FavoriteResponse.successfully({required String message})
       : this._(
-          isError: true,
+          isError: false,
           message: message,
         );
 
@@ -34,7 +34,7 @@ class FavoriteResponse {
           favorite: favorite,
         );
 
-  FavoriteResponse.characterList({
+  FavoriteResponse.list({
     required String message,
     required List<FavoriteEntity> favorites,
   }) : this._(
